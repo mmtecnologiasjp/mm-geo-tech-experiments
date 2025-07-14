@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Busca com Nominatim + Leaflet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      height: 80vh;
+    }
+    #search-form {
+      padding: 10px;
+      background-color: #f9f9f9;
+    }
+    input[type="text"] {
+      padding: 8px;
+      width: 60%;
+      font-size: 16px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="search-form">
+    <input type="text" id="search" placeholder="Digite um endereço (ex: Curitiba)">
+    <button onclick="searchLocation()">Buscar</button>
+  </div>
+
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    // Inicializa o mapa no centro do Brasil
+    const map = L.map('map').setView([-14.2350, -51.9253], 4);
+
+    // Adiciona camada base do OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker; // variável global do marcador
+
+    function searchLocation() {
+      const query = document.getElementById("search").value;
+
+      if (!query) return alert("Digite um endereço!");
+
+      // Requisição para o Nominatim
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+
+      fetch(url, {
+        headers: {
+          'User-Agent': 'nominatim-teste-mapa', // boa prática
+          'Accept-Language': 'pt-BR'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.length === 0) {
+            alert("Endereço não encontrado.");
+            return;
+          }
+
+          const lat = data[0].lat;
+          const lon = data[0].lon;
+          const displayName = data[0].display_name;
+
+          // Move o mapa para o local
+          map.setView([lat, lon], 15);
+
+          // Remove marcador anterior se existir
+          if (marker) map.removeLayer(marker);
+
+          // Adiciona novo marcador
+          marker = L.marker([lat, lon]).addTo(map)
+            .bindPopup(`<b>Resultado:</b><br>${displayName}`)
+            .openPopup();
+        })
+        .catch(err => {
+          console.error("Erro ao buscar:", err);
+          alert("Erro na busca. Verifique sua conexão.");
+        });
+    }
+  </script>
+</body>
+</html>
