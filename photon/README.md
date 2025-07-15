@@ -1,0 +1,102 @@
+# 🗺️ Projeto Photon
+
+ 
+
+ ### 1️⃣ Primeiramente crie um arquivo index.html:
+```bash
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Busca com Photon + Leaflet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    #map { height: 90vh; }
+    #search {
+      padding: 10px;
+      background: #f9f9f9;
+    }
+    input {
+      width: 60%;
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="search">
+  <input type="text" id="query" placeholder="Buscar endereço (ex: Curitiba)">
+  <button onclick="searchPhoton()">Buscar</button>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  const map = L.map('map').setView([-25.4296, -49.2712], 6);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  let marker;
+
+  function searchPhoton() {
+    const q = document.getElementById("query").value;
+    if (!q) return alert("Digite um endereço.");
+
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=1`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.features.length) {
+          alert("Nada encontrado.");
+          return;
+        }
+
+        const feature = data.features[0];
+        const [lon, lat] = feature.geometry.coordinates;
+        const name = feature.properties.name;
+        const city = feature.properties.city || "";
+        const country = feature.properties.country;
+
+        // Mover mapa
+        map.setView([lat, lon], 14);
+
+        // Remover marcador anterior
+        if (marker) map.removeLayer(marker);
+
+        // Adicionar novo marcador
+        marker = L.marker([lat, lon]).addTo(map)
+          .bindPopup(`<b>${name}</b><br>${city}, ${country}`)
+          .openPopup();
+      })
+      .catch(err => {
+        console.error("Erro ao buscar:", err);
+        alert("Erro na busca.");
+      });
+  }
+</script>
+
+</body>
+</html>
+```
+
+### 🚀 Rode o projeto:
+
+Utilize o Live-Server
+
+# Exemplo:
+
+<img width="2511" height="1016" alt="image" src="https://github.com/user-attachments/assets/613d3b99-b38c-44dc-9dcb-d7e76d002486" />
+

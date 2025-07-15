@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Google Maps </title>
+    <meta charset="utf-8" />
+    <style>
+      #map {
+        height: 2000px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1U9TI68bDlTRwb-V-eMrUCMxm9tpV_z0"></script>
+    <script>
+      function initMap() {
+        const location = { lat: -23.55052, lng: -46.633308 }; // cordenadas
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 12,
+          center: location,
+        });
+        const marker = new google.maps.Marker({
+          position: location,
+          map: map,
+        });
+      }
+    </script>
+  </head>
+  <body onload="initMap()">
+    <h3>Google Maps</h3>
+    <div id="map"></div>
+  </body>
+</html>

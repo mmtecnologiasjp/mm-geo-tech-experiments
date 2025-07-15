@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Leaflet + KartaView</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+    .popup-img {
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    const map = L.map("map").setView([1.296339198344591, 103.77095139306607], 14); // cordenadas aqui
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
+
+    map.on("click", async (e) => {
+      const { lat, lng } = e.latlng;
+      const popup = L.popup().setLatLng([lat, lng]).setContent("🔍 Buscando imagem...");
+      popup.addTo(map);
+
+      try {
+        const response = await fetch(`https://kartaview.org/api/0.1/photos?closeTo=${lng},${lat}&limit=1`);
+        const data = await response.json();
+
+        if (data && data.currentPageItems.length > 0) {
+          const photo = data.currentPageItems[0];
+          const imgUrl = `https://kartaview.org/photo/${photo.id}/thumb`;
+
+          popup.setContent(`
+            <strong>📷 Imagem de rua:</strong><br/>
+            <img src="${imgUrl}" class="popup-img" />
+          `);
+        } else {
+          popup.setContent("Nenhuma imagem encontrada nesse ponto.");
+        }
+      } catch (err) {
+        popup.setContent("Erro ao buscar dados da KartaView.");
+      }
+    });
+  </script>
+</body>
+</html>

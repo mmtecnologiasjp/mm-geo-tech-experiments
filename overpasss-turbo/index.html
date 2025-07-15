@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Overpass Turbo + Leaflet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+
+    button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    pre {
+      background: #f0f0f0;
+      padding: 10px;
+      max-height: 300px;
+      overflow: auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Consulta Overpass + Leaflet (Restaurantes em Curitiba)</h2>
+  <div id="map"></div>
+  <button onclick="buscarRestaurantes()">Buscar Restaurantes</button>
+  <pre id="saida">Clique no botão acima para ver os dados retornados...</pre>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
