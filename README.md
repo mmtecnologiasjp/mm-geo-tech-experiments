@@ -20,7 +20,12 @@ O repositório contempla estudos práticos com diversas bibliotecas e APIs, como
 - [TomTom Maps SDK for Web](https://developer.tomtom.com/maps-sdk-web)  
 - [Mapbox](https://www.mapbox.com/maps)  
 - [CesiumJS](https://cesium.com/platform/cesiumjs/)  
-- [Kartaview](https://kartaview.org/)  
+- [Kartaview](https://kartaview.org/)
+- [Photon](https://photon.komoot.io)
+- [Valhalla](https://valhalla.github.io/valhalla/)
+- [Nominatim](https://nominatim.org/)
+
+
 
 ---
 
